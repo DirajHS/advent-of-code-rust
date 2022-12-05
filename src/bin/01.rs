@@ -1,38 +1,41 @@
-pub fn part_one(input: &str) -> Option<u32> {
-    let mut max_calories: u32 = 0;
-    let mut calories_so_far: u32 = 0;
+pub fn part_one(input: &str) -> Option<u64> {
+    let mut parsed: Vec<Vec<u64>> = Vec::new();
     let mut calories_to_add = String::from("");
+    let mut elf: Vec<u64> = Vec::new();
     for calories in input.lines() {
         if !calories.is_empty() {
-            calories_so_far += calories.parse::<u32>().unwrap();
-            calories_to_add.push_str(calories);
-            calories_to_add.push('+');
+            elf.push(calories.parse::<u64>().unwrap());
         } else {
-            if calories_so_far > max_calories {
-                max_calories = calories_so_far;
-            }
-            println!("{} = {}", calories_to_add, calories_so_far);
-            calories_so_far = 0;
+            parsed.push(elf.clone());
+            elf.clear();
             calories_to_add.clear();
         }
     }
-    return Some(max_calories);
+    parsed.push(elf.clone());
+    let max: u64 = parsed.iter().map(|cals: &Vec<u64>| cals.iter().sum()).max().unwrap();
+    println!("{:?}", parsed);
+    return Some(max);
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
-    let mut calories_so_far: u32 = 0;
-    let mut calories_to_add = Vec::new();
+pub fn part_two(input: &str) -> Option<u64> {
+    let mut parsed: Vec<Vec<u64>> = Vec::new();
+    let mut calories_to_add = String::from("");
+    let mut elf: Vec<u64> = Vec::new();
     for calories in input.lines() {
         if !calories.is_empty() {
-            calories_so_far += calories.parse::<u32>().unwrap();
+            elf.push(calories.parse::<u64>().unwrap());
         } else {
-            calories_to_add.push(calories_so_far);
-            calories_so_far = 0;
+            parsed.push(elf.clone());
+            elf.clear();
+            calories_to_add.clear();
         }
     }
-    calories_to_add.sort_by(|a, b| b.cmp(a));
-    let max_calories: u32 = calories_to_add[0..=2].iter().sum();
-    return Some(max_calories);
+    parsed.push(elf.clone());
+    let mut max = parsed.iter().map(|cals: &Vec<u64>| cals.iter().sum::<u64>()).collect::<Vec<_>>();
+    max.sort_by(|a, b| b.cmp(a));
+    let val_to_ret: u64 = max.iter().take(3).sum();
+    println!("{:?}", max);
+    return Some(val_to_ret);
 }
 
 fn main() {
@@ -48,12 +51,12 @@ mod tests {
     #[test]
     fn test_part_one() {
         let input = advent_of_code::read_file("examples", 1);
-        assert_eq!(part_one(&input), None);
+        assert_eq!(part_one(&input), Some(24000));
     }
 
     #[test]
     fn test_part_two() {
         let input = advent_of_code::read_file("examples", 1);
-        assert_eq!(part_two(&input), None);
+        assert_eq!(part_two(&input), Some(45000));
     }
 }
