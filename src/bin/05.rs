@@ -1,5 +1,4 @@
 use std::ops::Div;
-use std::process::id;
 
 struct Operation {
     count: usize,
@@ -42,25 +41,6 @@ fn parse_stacks(input: &str) -> Vec<Vec<char>> {
     return stacks;
 }
 
-fn get_stacks() -> Vec<Vec<char>> {
-    /*let stacks: Vec<Vec<char>> = vec![
-        vec!['Z', 'N'],
-        vec!['M', 'C', 'D'],
-        vec!['P'],
-    ];*/
-    let stacks: Vec<Vec<char>> = vec![
-        vec!['D', 'L', 'J', 'R', 'V', 'G', 'F'],
-        vec!['T', 'P', 'M', 'B', 'V', 'H', 'J', 'S'],
-        vec!['V', 'H', 'M', 'F', 'D', 'G', 'P', 'C'],
-        vec!['M', 'D', 'P', 'N', 'G', 'Q'],
-        vec!['J', 'L', 'H', 'N', 'F'],
-        vec!['N', 'F', 'V', 'Q', 'D', 'G', 'T', 'Z'],
-        vec!['F', 'D', 'B', 'L'],
-        vec!['M', 'J', 'B', 'S', 'V', 'D', 'N'],
-        vec!['G', 'L', 'D'],
-    ];
-    return stacks;
-}
 pub fn part_one(input: &str) -> Option<String> {
     let mut stacks = parse_stacks(input);
     for line in input.lines() {
