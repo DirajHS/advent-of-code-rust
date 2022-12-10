@@ -22,7 +22,7 @@ struct RoundPartOne {
 
 struct RoundPartTwo {
     opponent: Type,
-    result: Result
+    result: Result,
 }
 
 impl RoundPartOne {
@@ -59,54 +59,48 @@ impl RoundPartTwo {
     fn get_score_part_two(&self) -> Option<u64> {
         let mut score = 0;
         match self.opponent {
-            Rock => {
-                match self.result {
-                    Win => {
-                        score += Win as u64;
-                        score += Paper as u64;
-                    }
-                    Lose => {
-                        score += Lose as u64;
-                        score += Scissors as u64;
-                    }
-                    Draw => {
-                        score += Draw as u64;
-                        score += Rock as u64;
-                    }
+            Rock => match self.result {
+                Win => {
+                    score += Win as u64;
+                    score += Paper as u64;
                 }
-            }
-            Paper => {
-                match self.result {
-                    Win => {
-                        score += Win as u64;
-                        score += Scissors as u64;
-                    }
-                    Lose => {
-                        score += Lose as u64;
-                        score += Rock as u64;
-                    }
-                    Draw => {
-                        score += Draw as u64;
-                        score += Paper as u64;
-                    }
+                Lose => {
+                    score += Lose as u64;
+                    score += Scissors as u64;
                 }
-            }
-            Scissors => {
-                match self.result {
-                    Win => {
-                        score += Win as u64;
-                        score += Rock as u64;
-                    }
-                    Lose => {
-                        score += Lose as u64;
-                        score += Paper as u64;
-                    }
-                    Draw => {
-                        score += Draw as u64;
-                        score += Scissors as u64;
-                    }
+                Draw => {
+                    score += Draw as u64;
+                    score += Rock as u64;
                 }
-            }
+            },
+            Paper => match self.result {
+                Win => {
+                    score += Win as u64;
+                    score += Scissors as u64;
+                }
+                Lose => {
+                    score += Lose as u64;
+                    score += Rock as u64;
+                }
+                Draw => {
+                    score += Draw as u64;
+                    score += Paper as u64;
+                }
+            },
+            Scissors => match self.result {
+                Win => {
+                    score += Win as u64;
+                    score += Rock as u64;
+                }
+                Lose => {
+                    score += Lose as u64;
+                    score += Paper as u64;
+                }
+                Draw => {
+                    score += Draw as u64;
+                    score += Scissors as u64;
+                }
+            },
         }
 
         return Some(score);
@@ -120,7 +114,7 @@ fn get_result_type(char: &char) -> Result {
         Draw
     } else {
         Win
-    }
+    };
 }
 
 fn get_player_type(char: &char) -> Type {
@@ -130,7 +124,7 @@ fn get_player_type(char: &char) -> Type {
         Paper
     } else {
         Scissors
-    }
+    };
 }
 
 fn get_opponent_type(char: &char) -> Type {
@@ -140,7 +134,7 @@ fn get_opponent_type(char: &char) -> Type {
         Paper
     } else {
         Scissors
-    }
+    };
 }
 
 pub fn part_one(input: &str) -> Option<u64> {
@@ -148,7 +142,7 @@ pub fn part_one(input: &str) -> Option<u64> {
     for line in input.lines() {
         let current_round = RoundPartOne {
             player: get_player_type(&line.chars().nth(2).unwrap()),
-            opponent: get_opponent_type(&line.chars().nth(0).unwrap())
+            opponent: get_opponent_type(&line.chars().nth(0).unwrap()),
         };
         rounds.push(current_round)
     }
@@ -164,7 +158,7 @@ pub fn part_two(input: &str) -> Option<u64> {
     for line in input.lines() {
         let current_round = RoundPartTwo {
             result: get_result_type(&line.chars().nth(2).unwrap()),
-            opponent: get_opponent_type(&line.chars().nth(0).unwrap())
+            opponent: get_opponent_type(&line.chars().nth(0).unwrap()),
         };
         rounds.push(current_round)
     }

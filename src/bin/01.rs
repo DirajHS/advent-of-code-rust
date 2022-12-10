@@ -12,7 +12,11 @@ pub fn part_one(input: &str) -> Option<u64> {
         }
     }
     parsed.push(elf.clone());
-    let max: u64 = parsed.iter().map(|cals: &Vec<u64>| cals.iter().sum()).max().unwrap();
+    let max: u64 = parsed
+      .iter()
+      .map(|cals: &Vec<u64>| cals.iter().sum())
+      .max()
+      .unwrap();
     println!("{:?}", parsed);
     return Some(max);
 }
@@ -31,7 +35,10 @@ pub fn part_two(input: &str) -> Option<u64> {
         }
     }
     parsed.push(elf.clone());
-    let mut max = parsed.iter().map(|cals: &Vec<u64>| cals.iter().sum::<u64>()).collect::<Vec<_>>();
+    let mut max = parsed
+      .iter()
+      .map(|cals: &Vec<u64>| cals.iter().sum::<u64>())
+      .collect::<Vec<_>>();
     max.sort_by(|a, b| b.cmp(a));
     let val_to_ret: u64 = max.iter().take(3).sum();
     println!("{:?}", max);

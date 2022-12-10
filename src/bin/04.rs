@@ -1,6 +1,6 @@
 struct Section {
-    from: usize,
-    to: usize
+  from: usize,
+  to: usize,
 }
 
 impl Section {
@@ -24,10 +24,10 @@ impl Section {
 
     fn parse(section_str: &str) -> Section {
         let from_to_vec: Vec<&str> = section_str.split('-').collect();
-        return Section {
-            from: from_to_vec.first().unwrap().parse().unwrap(),
-            to: from_to_vec.last().unwrap().parse().unwrap()
-        }
+      return Section {
+        from: from_to_vec.first().unwrap().parse().unwrap(),
+        to: from_to_vec.last().unwrap().parse().unwrap(),
+      };
     }
 }
 

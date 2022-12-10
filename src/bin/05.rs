@@ -1,7 +1,10 @@
+use std::ops::Div;
+use std::process::id;
+
 struct Operation {
     count: usize,
     from: usize,
-    to: usize
+    to: usize,
 }
 
 impl Operation {
@@ -9,14 +12,37 @@ impl Operation {
         let values: Vec<_> = op_str.split_ascii_whitespace().collect();
         let operation: Operation = Operation {
             count: values[1].parse::<usize>().unwrap(),
-            from: values[3].parse::<usize>().unwrap() - 1 ,
+            from: values[3].parse::<usize>().unwrap() - 1,
             to: values[5].parse::<usize>().unwrap() - 1,
         };
         return operation;
     }
 }
 
-fn get_stacks() -> Vec<Vec<char>>{
+fn parse_stacks(input: &str) -> Vec<Vec<char>> {
+    let mut stacks: Vec<Vec<char>> = Vec::new();
+    for line in input.lines() {
+        if line.is_empty() {
+            break;
+        }
+        for (idx, symbol) in line.char_indices() {
+            if symbol.is_ascii_uppercase() {
+                let idx_to_insert = idx.div(4);
+                while stacks.len() <= idx_to_insert {
+                    stacks.push(Vec::new());
+                }
+                stacks[idx_to_insert].push(symbol);
+            }
+        }
+    }
+    for stack in &mut stacks {
+        stack.reverse();
+    }
+    //dbg!(&stacks);
+    return stacks;
+}
+
+fn get_stacks() -> Vec<Vec<char>> {
     /*let stacks: Vec<Vec<char>> = vec![
         vec!['Z', 'N'],
         vec!['M', 'C', 'D'],
@@ -36,8 +62,11 @@ fn get_stacks() -> Vec<Vec<char>>{
     return stacks;
 }
 pub fn part_one(input: &str) -> Option<String> {
-    let mut stacks = get_stacks();
+    let mut stacks = parse_stacks(input);
     for line in input.lines() {
+        if !line.contains("move") {
+            continue;
+        }
         let operation = Operation::parse(line);
         for _ in 0..operation.count {
             let last_crate = stacks[operation.from].last().cloned().unwrap();
@@ -54,8 +83,11 @@ pub fn part_one(input: &str) -> Option<String> {
 }
 
 pub fn part_two(input: &str) -> Option<String> {
-    let mut stacks = get_stacks();
+    let mut stacks = parse_stacks(input);
     for line in input.lines() {
+        if !line.contains("move") {
+            continue;
+        }
         let operation = Operation::parse(line);
         let cut_off_idx = stacks[operation.from].len() - operation.count;
         let mut top_crates = stacks[operation.from].split_off(cut_off_idx);
@@ -90,5 +122,3 @@ mod tests {
         assert_eq!(part_two(&input), Some("MCD".to_owned()));
     }
 }
-
-
