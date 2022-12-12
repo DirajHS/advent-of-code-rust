@@ -67,17 +67,15 @@ pub fn can_visit(current_hill: &Hill, next_hill: &Hill) -> bool {
   }
 }
 
-pub fn update_bfs_queue(bfs_queue: &mut VecDeque<Hill>, visited: &mut Vec<Vec<bool>>, current_hill: &Hill, next_hill: &Hill) {
+pub fn update_bfs_queue(bfs_queue: &mut VecDeque<Hill>, visited: &mut Vec<Vec<bool>>, current_hill: &Hill, next_hill: &mut Hill) {
   if can_visit(&current_hill, &next_hill) {
-    bfs_queue.push_back(Hill {
-      distance: current_hill.distance + 1,
-      ..*next_hill
-    });
+    next_hill.distance = current_hill.distance + 1;
+    bfs_queue.push_back(**&next_hill);
     visited[next_hill.row as usize][next_hill.col as usize] = true;
   }
 }
 
-pub fn bfs(forest_matrix: &Vec<Vec<Hill>>, start: &Hill, destination: &Hill) -> Option<usize> {
+pub fn bfs(forest_matrix: &mut Vec<Vec<Hill>>, start: &Hill, destination: &Hill) -> Option<usize> {
   let mut visited: Vec<Vec<bool>> = vec![vec![false; forest_matrix[0].len()]; forest_matrix.len()];
   let mut bfs_queue: VecDeque<Hill> = VecDeque::new();
 
@@ -99,7 +97,7 @@ pub fn bfs(forest_matrix: &Vec<Vec<Hill>>, start: &Hill, destination: &Hill) -> 
       !visited[current_hill.row as usize - 1][current_hill.col as usize] {
       next_row = (current_hill.row - 1) as usize;
       next_col = current_hill.col as usize;
-      update_bfs_queue(&mut bfs_queue, &mut visited, &current_hill, &forest_matrix[next_row][next_col]);
+      update_bfs_queue(&mut bfs_queue, &mut visited, &current_hill, &mut forest_matrix[next_row][next_col]);
     }
 
     //down
@@ -107,7 +105,7 @@ pub fn bfs(forest_matrix: &Vec<Vec<Hill>>, start: &Hill, destination: &Hill) -> 
       !visited[current_hill.row as usize + 1][current_hill.col as usize] {
       next_row = (current_hill.row + 1) as usize;
       next_col = current_hill.col as usize;
-      update_bfs_queue(&mut bfs_queue, &mut visited, &current_hill, &forest_matrix[next_row][next_col]);
+      update_bfs_queue(&mut bfs_queue, &mut visited, &current_hill, &mut forest_matrix[next_row][next_col]);
     }
 
     //left
@@ -115,7 +113,7 @@ pub fn bfs(forest_matrix: &Vec<Vec<Hill>>, start: &Hill, destination: &Hill) -> 
       !visited[current_hill.row as usize][current_hill.col as usize - 1] {
       next_row = current_hill.row as usize;
       next_col = current_hill.col as usize - 1;
-      update_bfs_queue(&mut bfs_queue, &mut visited, &current_hill, &forest_matrix[next_row][next_col]);
+      update_bfs_queue(&mut bfs_queue, &mut visited, &current_hill, &mut forest_matrix[next_row][next_col]);
     }
 
     //right
@@ -123,25 +121,37 @@ pub fn bfs(forest_matrix: &Vec<Vec<Hill>>, start: &Hill, destination: &Hill) -> 
       !visited[current_hill.row as usize][current_hill.col as usize + 1] {
       next_row = current_hill.row as usize;
       next_col = current_hill.col as usize + 1;
-      update_bfs_queue(&mut bfs_queue, &mut visited, &current_hill, &forest_matrix[next_row][next_col]);
+      update_bfs_queue(&mut bfs_queue, &mut visited, &current_hill, &mut forest_matrix[next_row][next_col]);
     }
   }
   return Some(u32::MAX as usize);
 }
 
+pub fn print_forest_distance(forest: &Vec<Vec<Hill>>) {
+  println!();
+  for i in 0..forest.len() {
+    for j in 0..forest[0].len() {
+      print!(" {} ", forest[i][j].distance);
+    }
+    println!();
+  }
+}
+
 pub fn part_one(input: &str) -> Option<u32> {
-  let (forest_matrix, start, destination) = get_input_matrix(&input, false);
-  let distance = bfs(&forest_matrix, &start[0], &destination)?;
+  let (mut forest_matrix, start, destination) = get_input_matrix(&input, false);
+  let distance = bfs(&mut forest_matrix, &start[0], &destination)?;
+  //print_forest_distance(&forest_matrix);
   return Some(distance as u32);
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-  let (forest_matrix, possible_start, destination) = get_input_matrix(&input, true);
+  let (mut forest_matrix, possible_start, destination) = get_input_matrix(&input, true);
   let mut distances: Vec<u32> = Vec::new();
   for start in possible_start {
-    let distance = bfs(&forest_matrix, &start, &destination)?;
+    let distance = bfs(&mut forest_matrix, &start, &destination)?;
     //println!("possible start: {},{}: {}", start.row, start.col, distance);
     distances.push(distance as u32);
+    //print_forest_distance(&forest_matrix);
   }
   return Some(*distances.iter().min().unwrap());
 }
