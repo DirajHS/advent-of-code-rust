@@ -70,7 +70,7 @@ pub fn can_visit(current_hill: &Hill, next_hill: &Hill) -> bool {
 pub fn update_bfs_queue(bfs_queue: &mut VecDeque<Hill>, visited: &mut Vec<Vec<bool>>, current_hill: &Hill, next_hill: &mut Hill) {
   if can_visit(&current_hill, &next_hill) {
     next_hill.distance = current_hill.distance + 1;
-    bfs_queue.push_back(**&next_hill);
+    bfs_queue.push_back(*next_hill);
     visited[next_hill.row as usize][next_hill.col as usize] = true;
   }
 }
