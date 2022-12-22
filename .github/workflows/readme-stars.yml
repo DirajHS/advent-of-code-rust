@@ -21,11 +21,9 @@ jobs:
                   userId: ${{ secrets.AOC_USER_ID }}
                   sessionCookie: ${{ secrets.AOC_SESSION }}
                   year: ${{ secrets.AOC_YEAR }}
-            - uses:
-                actions/pull@v3
-            - run:
-                git pull
             - uses: stefanzweifel/git-auto-commit-action@v4
+            - run:
+                  git pull
               if: ${{ env.AOC_ENABLED }}
               env:
                   AOC_ENABLED: ${{ secrets.AOC_ENABLED }}
